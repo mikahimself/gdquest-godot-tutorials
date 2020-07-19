@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/Objects/StaticBlock.tscn" type="PackedScene" id=1]
+
+[node name="FollowAI" type="Node2D"]
+
+[node name="StaticBlock" parent="." instance=ExtResource( 1 )]
+position = Vector2( 476, 411 )
+
+[node name="StaticBlock2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 783, 229 )
+
+[node name="StaticBlock3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 364, 216 )
