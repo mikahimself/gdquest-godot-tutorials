@@ -16,7 +16,17 @@ _global_script_class_icons={
 [application]
 
 config/name="GDQuest Godot Tutorials"
+run/main_scene="res://src/Scenes/FollowAI.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Steering="*res://src/Scripts/AutoLoad/Steering.cs"
+
+[layer_names]
+
+2d_physics/layer_1="player"
+2d_physics/layer_2="world"
 
 [rendering]
 
