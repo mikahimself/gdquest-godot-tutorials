@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/Objects/StaticBlock.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/Agents/FollowAgent.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/Agents/ArriveToAgent.tscn" type="PackedScene" id=3]
 
 [node name="FollowAI" type="Node2D"]
+
+[node name="CharacterArriveTo" parent="." instance=ExtResource( 3 )]
+position = Vector2( 590, 297 )
 
 [node name="StaticBlock" parent="." instance=ExtResource( 1 )]
 position = Vector2( 476, 411 )
@@ -14,5 +18,7 @@ position = Vector2( 783, 229 )
 [node name="StaticBlock3" parent="." instance=ExtResource( 1 )]
 position = Vector2( 364, 216 )
 
-[node name="KinematicBody2D" parent="." instance=ExtResource( 2 )]
-position = Vector2( 590, 297 )
+[node name="CharacterFollow" parent="." instance=ExtResource( 2 )]
+visible = false
+position = Vector2( 808, 441 )
+MaxSpeed = 400.0

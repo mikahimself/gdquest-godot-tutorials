@@ -1,9 +1,11 @@
 using Godot;
 using System;
 
-public class FollowAgent : KinematicBody2D
+public class ArriveToAgent : KinematicBody2D
 {
     Sprite Triangle;
+    [Export]
+    public float SlowdownRadius = 300.0f;
     [Export]
     public float MaxSpeed = 500.0f;
     public const float DISTANCE_TRESHOLD = 3.0f;
@@ -15,11 +17,6 @@ public class FollowAgent : KinematicBody2D
         Triangle = (Sprite)GetNode("TriangleSprite");
     }
 
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
-
     public override void _PhysicsProcess(float delta)
     {
         Vector2 targetGlobalPosition = GetGlobalMousePosition();
@@ -27,7 +24,11 @@ public class FollowAgent : KinematicBody2D
         {
             return;
         }
-        _velocity = Steering.Follow(_velocity, GlobalPosition, targetGlobalPosition, MaxSpeed);
+        _velocity = Steering.ArriveTo(_velocity,
+                                    GlobalPosition,
+                                    targetGlobalPosition,
+                                    maxSpeed: MaxSpeed,
+                                    SlowdownRadius);
         _velocity = MoveAndSlide(_velocity);
         Triangle.Rotation = _velocity.Angle();
     }

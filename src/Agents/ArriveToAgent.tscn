@@ -1,14 +1,15 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/Graphics/arrow.png" type="Texture" id=1]
-[ext_resource path="res://src/Scripts/FollowAgent.cs" type="Script" id=2]
+[ext_resource path="res://src/Scripts/ArriveToAgent.cs" type="Script" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 13.0514
 
-[node name="CharacterFollow" type="KinematicBody2D"]
+[node name="CharacterArriveTo" type="KinematicBody2D"]
 collision_mask = 2
 script = ExtResource( 2 )
+MaxSpeed = 1000.0
 
 [node name="TriangleSprite" type="Sprite" parent="."]
 position = Vector2( 0, -3 )
