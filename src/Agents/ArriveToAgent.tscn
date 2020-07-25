@@ -7,9 +7,11 @@
 radius = 13.0514
 
 [node name="CharacterArriveTo" type="KinematicBody2D"]
+position = Vector2( 8, 0 )
 collision_mask = 2
 script = ExtResource( 2 )
-MaxSpeed = 1000.0
+SlowdownRadius = 200.0
+MaxSpeed = 500.0
 
 [node name="TriangleSprite" type="Sprite" parent="."]
 position = Vector2( 0, -3 )

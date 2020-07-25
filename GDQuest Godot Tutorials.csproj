@@ -57,6 +57,7 @@
     <Compile Include="src\Scripts\Autoload\Steering.cs" />
     <Compile Include="src\Scripts\FollowAgent.cs" />
     <Compile Include="src\Scripts\ArriveToAgent.cs" />
+    <Compile Include="src\Scripts\Target.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">

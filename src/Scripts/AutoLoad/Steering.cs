@@ -40,7 +40,7 @@ public class Steering : Node
         // Vector pointing from agent's current position to it's target at max speed.
         float toTarget = globalPosition.DistanceTo(targetPosition);
         Vector2 desiredVelocity = (targetPosition - globalPosition).Normalized() * maxSpeed;
-        if (toTarget > slowdownRadius)
+        if (toTarget < slowdownRadius)
         {
             desiredVelocity *= (toTarget / slowdownRadius) * 0.8f + 0.2f;
         }
