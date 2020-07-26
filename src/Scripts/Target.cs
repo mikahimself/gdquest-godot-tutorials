@@ -5,13 +5,12 @@ public class Target : Area2D
 {
 
     AnimationPlayer ap;
-    [Signal]
-    public delegate void TargetCreated(Area2D area);
+
     public override void _Ready()
     {
         ap = (AnimationPlayer)GetNode("AnimationPlayer");
         Connect("body_entered", this, "_onBodyEntered");
-        GetParent().GetNode("CharacterArriveTo").Connect("StartedMoving", this, "_OnTargetCreated");
+        GetParent().GetNode("CharacterArriveTo").Connect("StartedMoving", this, "_OnAgentStartedMoving");
         Visible = false;
     }
 
@@ -28,20 +27,20 @@ public class Target : Area2D
         if (Input.IsActionPressed("click"))
         {
             GlobalPosition = GetGlobalMousePosition();
-            EmitSignal(nameof(TargetCreated), this);
         }
     }
 
     private void _onBodyEntered(PhysicsBody2D body)
-   {
-       ap.Play("FadeOut");
-   }
-    async public void _OnTargetCreated()
+    {
+        ap.Play("FadeOut");
+    }
+    
+    async public void _OnAgentStartedMoving()
     {
         if (GetOverlappingBodies().Count > 0)
         {
             await ToSignal(ap, "animation_finished");
-            ap.Play("FadeOut"); 
+            ap.Play("FadeOut");
         }
     }
 }

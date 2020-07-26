@@ -9,9 +9,9 @@ public class FollowAgent : KinematicBody2D
     public const float DISTANCE_TRESHOLD = 3.0f;
     private Vector2 _velocity = Vector2.Zero;
     private Vector2 _targetGlobalPosition;
+    [Signal]
     public delegate void StartedMoving();
     public bool startedMoving = false;
-
 
     public override void _Ready()
     {
@@ -31,6 +31,9 @@ public class FollowAgent : KinematicBody2D
     {
         if (startedMoving)
         {
+            // Emit signal one frame after agent starts moving. This is because
+            // Target uses GetOverlappingBodies(), which is updated only once per frame,
+            // to detect overlapping bodies.
             EmitSignal(nameof(StartedMoving));
             startedMoving = false;
         }
@@ -38,7 +41,6 @@ public class FollowAgent : KinematicBody2D
         {
             _targetGlobalPosition = GetGlobalMousePosition();
             startedMoving = true;
-            
         }
 
         if (GlobalPosition.DistanceTo(_targetGlobalPosition) < DISTANCE_TRESHOLD)
