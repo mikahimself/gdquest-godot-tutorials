@@ -16,12 +16,12 @@ _global_script_class_icons={
 [application]
 
 config/name="GDQuest Godot Tutorials"
-run/main_scene="res://src/Scenes/FollowAI.tscn"
+run/main_scene="res://src/IntroToSteeringBehaviors/Scenes/FollowAI.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-Steering="*res://src/Scripts/AutoLoad/Steering.cs"
+Steering="*res://src/IntroToSteeringBehaviors/Scripts/AutoLoad/Steering.cs"
 
 [display]
 
