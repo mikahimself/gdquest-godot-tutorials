@@ -63,6 +63,7 @@
     <Compile Include="src\IntroToSteeringBehaviors\Scripts\FollowAgent.cs" />
     <Compile Include="src\IntroToSteeringBehaviors\Scripts\ArriveToAgent.cs" />
     <Compile Include="src\IntroToSteeringBehaviors\Scripts\Target.cs" />
+    <Compile Include="src\TheArtOfProceduralGeneration\Scripts\BasicDungeon.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
