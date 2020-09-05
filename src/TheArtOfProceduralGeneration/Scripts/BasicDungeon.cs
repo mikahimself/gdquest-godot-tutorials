@@ -45,7 +45,6 @@ public class BasicDungeon : Node2D
         var rng = new RandomNumberGenerator();
         rng.Randomize();
         
-
         // Save info here for Level node
         var data = new Dictionary<Vector2, int>();
         // Store generated rooms (used for checking intersections)
@@ -69,15 +68,22 @@ public class BasicDungeon : Node2D
         return data.Keys.ToArray();
     }
 
+    /// <summary>The <c>_getRandomRoom</c> generates a random room as
+    /// a <c>Rect2</c>, which stores the room's position and size.</summary>
     public Rect2 _getRandomRoom(RandomNumberGenerator rng)
     {
+        // RoomSize.x defines the min size, RoomSize.y the max.
         var width = rng.RandiRange((int)RoomsSize.x, (int)RoomsSize.y);
         var height = rng.RandiRange((int)RoomsSize.x, (int)RoomsSize.y);
+        // Rooms are defined as Rect2
         var x = rng.RandiRange(0, (int)LevelSize.x - width - 1);
         var y = rng.RandiRange(0, (int)LevelSize.y - height - 1);
         return new Rect2(x, y, width, height);
     }
 
+    /// <summary>The <c>_addRoom</c> method adds randomly generated rooms in the
+    /// <c>rooms</c> list, and each Vector2 point of the room in the <c>data</c>
+    /// dictionary</summary>
     public void _addRoom(Dictionary<Vector2, int> data, List<Rect2> rooms, Rect2 room)
     {
         rooms.Add(room);
@@ -90,6 +96,9 @@ public class BasicDungeon : Node2D
         }
     }
     
+    /// <summary>The <c>_addConnection</c> method adds a connection from <c>room1</c> to <c>room2</c>.
+    /// The connection starts from the middle point of the room on either the top/bottom or left/right
+    /// side of the room.</summary>
     public void _addConnection(RandomNumberGenerator rng, Dictionary<Vector2, int> data, Rect2 room1, Rect2 room2)
     {
         var roomCenter1 = (room1.Position + room1.End) / 2;
@@ -97,15 +106,24 @@ public class BasicDungeon : Node2D
 
         if (rng.RandiRange(0, 1) == 0)
         {   
+            // 1. Draw line from the first room's center X position to second room's center X position
+            // horizontally along the middle point of the first room.
+            // 2. Draw line from the first room's center Y position to second room's center Y position
+            // vertically along the middle point of the second room.
+            // That is, start from left/right side, finish up at top or bottom.
             _addCorridor(data, (int)roomCenter1.x, (int)roomCenter2.x, (int)roomCenter1.y, Vector2.Axis.X);
             _addCorridor(data, (int)roomCenter1.y, (int)roomCenter2.y, (int)roomCenter2.x, Vector2.Axis.Y);
         }
         else
         {
+            // Start from top/bottm, finish up at left/right side.
             _addCorridor(data, (int)roomCenter1.y, (int)roomCenter2.y, (int)roomCenter1.x, Vector2.Axis.Y);
             _addCorridor(data, (int)roomCenter1.x, (int)roomCenter2.x, (int)roomCenter2.y, Vector2.Axis.X);
         }
     }
+
+    /// <summary>The <c>_addCorridor</c> method adds corridor points along either the X axis or the Y axis
+    /// starting from the <c>start</c> position to the <c>end</c> position.</summary>
 
     public void _addCorridor(Dictionary<Vector2, int> data, int start, int end, int constant, Vector2.Axis axis)
     {
@@ -126,6 +144,8 @@ public class BasicDungeon : Node2D
         }
     }
 
+    /// <summary>The <c>_intersect</c> method tests whether the room passed as the second parameter
+    /// intersects with any of the rooms in the <c>rooms</c> list.</summary>
     public bool _intersects(List<Rect2> rooms, Rect2 room)
     {
         var isIntersecting = false;
