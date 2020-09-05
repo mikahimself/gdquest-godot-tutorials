@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="GDQuest Godot Tutorials"
-run/main_scene="res://src/IntroToSteeringBehaviors/Scenes/FollowAI.tscn"
+run/main_scene="res://src/TheArtOfProceduralGeneration/Scenes/BasicDungeon.tscn"
 config/icon="res://icon.png"
 
 [autoload]
