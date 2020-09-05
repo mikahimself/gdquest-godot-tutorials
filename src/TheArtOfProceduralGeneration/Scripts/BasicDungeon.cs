@@ -96,7 +96,7 @@ public class BasicDungeon : Node2D
         var roomCenter2 = (room2.Position + room2.End) / 2;
 
         if (rng.RandiRange(0, 1) == 0)
-        {
+        {   
             _addCorridor(data, (int)roomCenter1.x, (int)roomCenter2.x, (int)roomCenter1.y, Vector2.Axis.X);
             _addCorridor(data, (int)roomCenter1.y, (int)roomCenter2.y, (int)roomCenter2.x, Vector2.Axis.Y);
         }
@@ -109,7 +109,7 @@ public class BasicDungeon : Node2D
 
     public void _addCorridor(Dictionary<Vector2, int> data, int start, int end, int constant, Vector2.Axis axis)
     {
-        for (int t = Math.Min(start, end); t < Math.Max(start, end); t++)
+        for (int t = Math.Min(start, end); t <= Math.Max(start, end); t++)
         {
             var point = Vector2.Zero;
 
@@ -139,9 +139,4 @@ public class BasicDungeon : Node2D
         }
         return isIntersecting;
     }
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
 }
