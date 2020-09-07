@@ -14,6 +14,7 @@ public class BasicDungeon : Node2D
 
     TileMap level;
     Camera2D camera;
+    const float FACTOR = 1.0f / 8.0f;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -58,7 +59,7 @@ public class BasicDungeon : Node2D
             {
                 continue;
             }
-            _addRoom(data, rooms, room);
+            _addRoom(rng, data, rooms, room);
             if (rooms.Count > 1)
             {
                 Rect2 roomPrevious = rooms[rooms.Count - 2];
@@ -83,15 +84,91 @@ public class BasicDungeon : Node2D
 
     /// <summary>The <c>_addRoom</c> method adds randomly generated rooms in the
     /// <c>rooms</c> list, and each Vector2 point of the room in the <c>data</c>
-    /// dictionary</summary>
-    public void _addRoom(Dictionary<Vector2, int> data, List<Rect2> rooms, Rect2 room)
+    /// dictionary.</summary>
+    public void _addRoom(RandomNumberGenerator rng, Dictionary<Vector2, int> data, List<Rect2> rooms, Rect2 room)
     {
         rooms.Add(room);
-        for (int x = (int)room.Position.x; x < (int)room.End.x; x++)
+
+        // 50% chance to create a rectangular room.
+        if (rng.RandiRange(0, 1) == 0)
         {
-          for (int y = (int)room.Position.y; y < (int)room.End.y; y++)
+            for (int x = (int)room.Position.x; x < (int)room.End.x; x++)
             {
-                data[new Vector2(x, y)] = 0;
+                for (int y = (int)room.Position.y; y < (int)room.End.y; y++)
+                {
+                    data[new Vector2(x, y)] = 0;
+                }
+            }
+        }
+        else
+        {
+            var unit = FACTOR * room.Size;
+            Rect2[] order = new Rect2[] {
+                // Create a rectangle at the top part of the original room rectangle.
+                // This rectangle is two units narrower than the original room Rect2
+                // with one unit taken from each side, and one unit high.
+                room.GrowIndividual(-unit.x, 0, -unit.x, unit.y - room.Size.y),
+                // This one is on the right side of the original room rectangle. It's
+                // width is one unit and its height is two units smaller than the originals.
+                room.GrowIndividual(unit.x - room.Size.x, -unit.y, 0, -unit.y),
+                // This one is at the bottom. Two units narrower and one unit high.
+                room.GrowIndividual(-unit.x, unit.y - room.Size.y, -unit.x, 0),
+                // This one's at the left side. Two units shorter and one unit wide.
+                room.GrowIndividual(0, -unit.y, unit.x - room.Size.x, -unit.y),
+            };
+
+            // Stores the Vector2's that make up the organic polygon shape
+            List<Vector2> poly = new List<Vector2>(); 
+            
+            // Loop through the rectangles one by one
+            for (int index = 0; index < order.Length ; index++)
+            {
+                Rect2 rect = order[index];
+                // Top and bottom are even, sides are odd
+                bool isEven = index % 2 == 0;
+                List<Vector2> poly_partial = new List<Vector2>();
+
+                // Create one or two points inside each rectangle
+                foreach (int r in Enumerable.Range(0, rng.RandiRange(1, 2)))
+                {
+                    // Pick a random point inside the rectangle
+                    poly_partial.Add(new Vector2(
+                        rng.RandfRange(rect.Position.x, rect.End.x),
+                        rng.RandfRange(rect.Position.y, rect.End.y)
+                    ));
+                }
+                // Sort the points that get created using LINQ
+                if (isEven)
+                {
+                    poly_partial.Sort((vec1, vec2) => vec1.x.CompareTo(vec2.x));
+                }
+                else
+                {
+                    poly_partial.Sort((vec1, vec2) => vec1.y.CompareTo(vec2.y));
+                }
+                // If two points are created, reverse the order so that the points
+                // end up being in clockwise order.
+                if (index > 1)
+                {
+                    poly_partial.Reverse();
+                }
+                // Add points that get created to the complete polygon
+                poly.AddRange(poly_partial);
+            }
+
+            // Loop through the room's points
+            for (float x = room.Position.x; x < room.End.x; x++)
+            {
+                for (float y = room.Position.y; y < room.End.y; y++)
+                {
+                    Vector2 point = new Vector2(x, y);
+                    // Check to see if the current point is inside the polygon 
+                    // we just created. Store the point in data only if the point
+                    // is within the polygon.
+                    if (Geometry.IsPointInPolygon(point, poly.ToArray())) {
+                        data[point] = 0;
+                    }
+                }
             }
         }
     }
@@ -124,7 +201,6 @@ public class BasicDungeon : Node2D
 
     /// <summary>The <c>_addCorridor</c> method adds corridor points along either the X axis or the Y axis
     /// starting from the <c>start</c> position to the <c>end</c> position.</summary>
-
     public void _addCorridor(Dictionary<Vector2, int> data, int start, int end, int constant, Vector2.Axis axis)
     {
         for (int t = Math.Min(start, end); t <= Math.Max(start, end); t++)
